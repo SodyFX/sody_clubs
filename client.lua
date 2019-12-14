@@ -370,7 +370,7 @@ function OpenClubOwnerMenu(club, rank)
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'owner_actions_' .. club, {
 		title    = _U('owner_menu'),
-		align    = 'top-left',
+		align    = 'top-right',
 		elements = elements
 	}, function(data, menu)
 
@@ -432,7 +432,7 @@ end
 function OpenManageMembersMenu(club)
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_members_' .. club, {
 		title    = _U('member_management'),
-		align    = 'top-left',
+		align    = 'top-right',
 		elements = {
 			{label = _U('member_list'), value = 'member_list'},
 			{label = _U('recruit'),       value = 'recruit'}
@@ -514,13 +514,13 @@ function OpenRecruitMenu(club)
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'recruit_' .. club, {
 			title    = _U('recruiting'),
-			align    = 'top-left',
+			align    = 'top-right',
 			elements = elements
 		}, function(data, menu)
 
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'recruit_confirm_' .. club, {
 				title    = _U('do_you_want_to_recruit', data.current.name),
-				align    = 'top-left',
+				align    = 'top-right',
 				elements = {
 					{label = _U('no'),  value = 'no'},
 					{label = _U('yes'), value = 'yes'}
@@ -564,7 +564,7 @@ function OpenPromoteMenu(clubname, member)
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'promote_member_' .. clubname, {
 			title    = _U('promote_member', member.name),
-			align    = 'top-left',
+			align    = 'top-right',
 			elements = elements
 		}, function(data, menu)
 			menu.close()
@@ -598,7 +598,7 @@ function OpenManagePayMenu(clubname)
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_pay_' .. clubname, {
 			title    = _U('pay_management'),
-			align    = 'top-left',
+			align    = 'top-right',
 			elements = elements
 		}, function(data, menu)
 
@@ -1227,7 +1227,7 @@ function OpenChangingRoomMenu()
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'player_dressing',
 		{
 			title    = 'Changing Room',
-			align    = 'top-left',
+			align    = 'top-right',
 			elements = elements
 		}, function(data2, menu2)
 
@@ -1266,7 +1266,7 @@ function OpenMenuGarage(PointType)
 		'default', GetCurrentResourceName(), 'garage_menu',
 		{
 			title    = "Club Garage",
-			align    = 'top-left',
+			align    = 'top-right',
 			elements = elements,
 		},
 		function(data, menu)
@@ -1323,7 +1323,7 @@ function ListVehiclesMenu()
 		'default', GetCurrentResourceName(), 'spawn_vehicle',
 		{
 			title    = "Club Garage",
-			align    = 'top-left',
+			align    = 'top-right',
 			elements = elements,
 		},
 		function(data, menu)
