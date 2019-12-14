@@ -24,7 +24,7 @@ A resource for FiveM and ESX. This resources adds an additional layer of society
 - Automatic club payouts to members either out of club bank balance or generic payouts (similar to ESX Paychecks)
 
 ### Club Owner Functions:
-- Add money to a larger "club bank" balance
+- Add money to a "club bank" balance
 - Add/promote/remove members
 - Adjust member pay rates
     
@@ -33,12 +33,13 @@ A resource for FiveM and ESX. This resources adds an additional layer of society
 
 ## How to add people to club:
 
-Use `/setclub PlayerId ClubName ClubRank` command as jobmaster/admin/superadmin or as club owner, recruit members via Owner menu
+Use `/setclub PlayerId ClubName ClubRank` command as jobmaster/admin/superadmin or as club owner, recruit members via the Owner menu
 
 ## Installation:
  
 - Import sody_clubs.sql into your database to add club and club ranks tables (includes LMC club example)
 - Add additional clubs, club ranks, addon_account, addon_inventory and datastore (latter 3 need club_clubname, club_clubname_pub and club_clubname_priv names, see example) to database as needed. Adjust config.lua and add club position data as needed
+- If using an IPL/instance, you can utilize the Teleporter and GarageTeleporter options in the config.lua for teleport circles
 - Alter config.lua as needed for global options
 - Add this in your server.cfg :
 
