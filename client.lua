@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Sody Clubs
--- v1.0 - 11/29/2019
+-- v1.0.1 - 12/13/2019
 -- By SodyFX with Love
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -547,22 +547,22 @@ function OpenRecruitMenu(club)
 
 end
 
-function OpenPromoteMenu(club, member)
+function OpenPromoteMenu(clubname, member)
 	ESX.TriggerServerCallback('sody_clubs:getClub', function(club)
 
 		local elements = {}
 
 		for i=1, #club.ranks, 1 do
-			local rankLabel = (club.ranks[i].label == '' and club.label or club.ranks[i].label)
+			local rankLabel = (club.ranks[i].club_rank_label == '' and club.club_rank_label or club.ranks[i].club_rank_label)
 
 			table.insert(elements, {
 				label = rankLabel,
-				value = club.ranks[i].rank,
-				selected = (member.club.rank == club.ranks[i].rank)
+				value = club.ranks[i].club_rank,
+				selected = (member.club.club_rank == club.ranks[i].club_rank)
 			})
 		end
 
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'promote_member_' .. club, {
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'promote_member_' .. clubname, {
 			title    = _U('promote_member', member.name),
 			align    = 'top-left',
 			elements = elements
@@ -571,14 +571,14 @@ function OpenPromoteMenu(club, member)
 			ESX.ShowNotification(_U('you_have_promoted', member.name, data.current.label))
 
 			ESX.TriggerServerCallback('sody_clubs:setClub', function()
-				OpenMemberList(club)
-			end, member.identifier, club, data.current.value, 'promote')
+				OpenMemberList(clubname)
+			end, member.identifier, clubname, data.current.value, 'promote')
 		end, function(data, menu)
 			menu.close()
-			OpenMemberList(club)
+			OpenMemberList(clubname)
 		end)
 
-	end, club)
+	end, clubname)
 
 end
 
@@ -1364,23 +1364,15 @@ function StockVehicleMenu()
 					for _,v in pairs(vehicules) do
 						if plate == v.plate then
 							owned = true
-							--TriggerServerEvent('eden_garage:debug', "vehicle plate returned to the garage: "  .. vehicleProps.plate)
-							--TriggerServerEvent('eden_garage:logging',"vehicle returned to the garage: " .. engineHealth)
-							
-							--if engineHealth < 1000 then
-                                --local fraisRep = math.floor((1000 - engineHealth) * Config.RepairMultiplier)
-                                --reparation(fraisRep, vehicle, vehicleProps)
-                            --else
-                                TriggerServerEvent('eden_garage:deletevehicle_sv', vehicleProps.plate)
-							    TriggerServerEvent('eden_garage:modifystate', vehicleProps, true)
+                            TriggerServerEvent('eden_garage:deletevehicle_sv', vehicleProps.plate)
+						    TriggerServerEvent('eden_garage:modifystate', vehicleProps, true)
 
-							    exports.pNotify:SendNotification({
-							        text = _U('ranger'),
-							        queue = 'right',
-							        timeout = 400,
-							        layout = 'centerLeft'
-							    })
-                            --end
+						    exports.pNotify:SendNotification({
+						        text = _U('ranger'),
+						        queue = 'right',
+						        timeout = 400,
+						        layout = 'centerLeft'
+						    })
 						end
 					end
 					if owned == false then

@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Sody Clubs
--- v1.0 - 11/29/2019
+-- v1.0.1 - 12/13/2019
 -- By SodyFX with Love
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -12,9 +12,9 @@ local Clubs, ClubList, ClubListFull = {}, {}, {}
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-MySQL.ready(function()
---AddEventHandler('onResourceStart', function(resourceName) -- For debugging to start/stop resources without server restart
-	--Wait(5000) -- For debugging to start/stop resources without server restart
+--MySQL.ready(function()
+AddEventHandler('onResourceStart', function(resourceName) -- For debugging to start/stop resources without server restart
+	Wait(5000) -- For debugging to start/stop resources without server restart
 	local result = MySQL.Sync.fetchAll('SELECT * FROM sody_clubs', {})
 
 	for i=1, #result, 1 do
@@ -624,7 +624,7 @@ end)
 RegisterServerEvent('sody_clubs:bankBalance')
 AddEventHandler('sody_clubs:bankBalance', function(club)
 	local _source = source
-	local bankname = "club_" .. club
+	local bankname = "club_" .. club .. "_bank"
 	TriggerEvent('esx_addonaccount:getSharedAccount', bankname, function(account)
 		TriggerClientEvent('esx:showNotification', _source, 'Account balance: ~g~$' .. account.money)
 	end)
@@ -639,7 +639,7 @@ AddEventHandler('sody_clubs:withdrawBank', function(club, amount)
 	end
 	amount = ESX.Math.Round(tonumber(amount))
 
-	local bankname = "club_" .. club
+	local bankname = "club_" .. club .. "_bank"
 
 	TriggerEvent('esx_addonaccount:getSharedAccount', bankname, function(account)
 		if amount > 0 and account.money >= amount then
@@ -662,7 +662,7 @@ AddEventHandler('sody_clubs:depositBank', function(club, amount)
 	end
 	amount = ESX.Math.Round(tonumber(amount))
 
-	local bankname = "club_" .. club
+	local bankname = "club_" .. club .. "_bank"
 
 	if amount > 0 and xPlayer.getMoney() >= amount then
 		TriggerEvent('esx_addonaccount:getSharedAccount', bankname, function(account)
@@ -698,18 +698,17 @@ ESX.RegisterServerCallback('sody_clubs:setClub', function(source, cb, identifier
 end)
 
 function setClub(sourceplayer, identifier, club, rank, type)
+
 	local club = club
 	local rank = rank
+	local identifier = identifier
 	local xPlayer, xTarget = nil, nil
 	while xPlayer == nil do
 		xPlayer = ESX.GetPlayerFromId(sourceplayer)
 		Wait(10)
 	end
 
-	while xTarget == nil do
-		xTarget = ESX.GetPlayerFromIdentifier(identifier)
-		Wait(10)
-	end
+	xTarget = ESX.GetPlayerFromIdentifier(identifier)
 
 	if club == "none" then
 		club = nil
@@ -717,25 +716,38 @@ function setClub(sourceplayer, identifier, club, rank, type)
 	end
 
 	MySQL.Async.execute('UPDATE users SET club = @club, club_rank = @club_rank WHERE identifier = @identifier', {
-		['@club']        = club,
-		['@club_rank']  = rank,
+		['@club'] = club,
+		['@club_rank'] = rank,
 		['@identifier'] = identifier
 	}, function(rowsChanged)
+
+		if rowsChanged then
+			if type == 'hire' then
+				if xTarget then
+					TriggerClientEvent('esx:showNotification', xTarget.source, _U('you_have_been_hired', ClubListFull[club]))
+					TriggerClientEvent('sody_clubs:clubAdded', xTarget.source, club, rank, Clubs[club].ranks[tostring(rank)].club_rank_name)
+				end
+			elseif type == 'promote' then
+				if xTarget then
+					TriggerClientEvent('esx:showNotification', xTarget.source, _U('you_have_been_promoted'))
+					TriggerClientEvent('sody_clubs:clubPromoted', xTarget.source, rank, Clubs[club].ranks[tostring(rank)].club_rank_name)
+				end
+			elseif type == 'remove' then
+				if xTarget then
+					TriggerClientEvent('esx:showNotification', xTarget.source, _U('you_have_been_fired', ClubListFull[club]))
+					TriggerClientEvent('sody_clubs:clubRemoved', xTarget.source)
+				end
+			elseif type == 'none' then
+				if xTarget then
+					TriggerClientEvent('sody_clubs:clubRemoved', xTarget.source)
+				end
+			end
+		else
+			TriggerClientEvent('esx:showNotification', xPlayer.source, 'Club: System Error')
+		end
 		
 	end)
 
-	if type == 'hire' then
-		TriggerClientEvent('esx:showNotification', xTarget.source, _U('you_have_been_hired', ClubListFull[club]))
-		TriggerClientEvent('sody_clubs:clubAdded', xTarget.source, club, rank, Clubs[club].ranks[tostring(rank)].club_rank_name)
-	elseif type == 'promote' then
-		TriggerClientEvent('esx:showNotification', xTarget.source, _U('you_have_been_promoted'))
-		TriggerClientEvent('sody_clubs:clubPromoted', xTarget.source, rank, Clubs[club].ranks[tostring(rank)].club_rank_name)
-	elseif type == 'remove' then
-		TriggerClientEvent('esx:showNotification', xTarget.source, _U('you_have_been_fired', ClubListFull[club]))
-		TriggerClientEvent('sody_clubs:clubRemoved', xTarget.source)
-	elseif type == 'none' then
-		TriggerClientEvent('sody_clubs:clubRemoved', xTarget.source)
-	end
 end
 
 ESX.RegisterServerCallback('sody_clubs:getMembers', function(source, cb, club)
@@ -875,7 +887,7 @@ function clubPay()
 			if xPlayer then
 				if pay > 0 then
 					if Config.EnableClubBankPay then
-						local bankname = "club_" .. club
+						local bankname = "club_" .. club .. "_bank"
 						TriggerEvent('esx_addonaccount:getSharedAccount', bankname, function (account)
 							if account.money >= pay then
 								xPlayer.addAccountMoney('bank', pay)

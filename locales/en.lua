@@ -61,6 +61,7 @@ Locales['en'] = {
   ['status_in_garage'] = '%s: <font color="green">In Garage</font>',
   ['status_impounded'] = '%s: <font color="red">Impounded</font>',
   ['ranger'] = 'Garage: <br /> Your car has been stored in the garage!',
+  ['promote_member'] = 'promote %s',
   
   -- LMC
   ['lmcmenu'] = 'LMC Menu',
