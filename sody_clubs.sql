@@ -15,6 +15,15 @@ CREATE TABLE `sody_clubs_ranks` (
 
 ALTER TABLE `users` ADD `club` VARCHAR(30) NULL, ADD `club_rank` TINYINT(5) NULL;
 
+INSERT INTO `sody_clubs` (`name`, `label`) VALUES ('lmc', 'Lost Motorcycle Club');f
+
+INSERT INTO `sody_clubs_ranks` (`id`, `club_name`, `club_rank`, `club_rank_name`, `club_rank_label`, `pay`) VALUES
+(NULL, 'lmc', 0, 'biker', 'Biker', 1500),
+(NULL, 'lmc', 1, 'saa', 'Sergeant at Arms', 2000),
+(NULL, 'lmc', 2, 'vicepresident', 'Vice President', 2500),
+(NULL, 'lmc', 3, 'treasurer', 'Treasurer', 2500),
+(NULL, 'lmc', 4, 'owner', 'President', 1000);
+
 -- LMC EXAMPLE --
 INSERT INTO `addon_account` (`name`, `label`, `shared`) VALUES
 ('club_lmc_bank', 'LMC', 1),
