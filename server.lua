@@ -12,8 +12,8 @@ local Clubs, ClubList, ClubListFull = {}, {}, {}
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
---MySQL.ready(function()
-AddEventHandler('onResourceStart', function(resourceName) -- For debugging to start/stop resources without server restart
+MySQL.ready(function()
+--AddEventHandler('onResourceStart', function(resourceName) -- For debugging to start/stop resources without server restart
 	Wait(5000) -- For debugging to start/stop resources without server restart
 	local result = MySQL.Sync.fetchAll('SELECT * FROM sody_clubs', {})
 
