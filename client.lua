@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Sody Clubs
--- v1.0.2 - 12/20/2019
+-- v1.0.3 - 12/26/2019
 -- By SodyFX with Love
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -100,30 +100,28 @@ function addClubBlips(club)
 end
 
 RegisterNetEvent('sody_clubs:clubAdded')
-AddEventHandler('sody_clubs:clubAdded', function(club)
+AddEventHandler('sody_clubs:clubAdded', function(club, clubrank, clubrankname)
 	zones = {}
 	garage = {}
 	hasClub = false
 	Citizen.Wait(1000)
-	ESX.TriggerServerCallback('sody_clubs:getPlayerClub', function(playerdata)
-		PlayerClub = playerdata.club
-		PlayerRank = playerdata.club_rank_name
-		PlayerRankNum = playerdata.club_rank
-		if PlayerClub ~= nil and has_value(ClubList, PlayerClub) then
-			zones = Config.Clubs[PlayerClub].Zones
-			garage = Config.Clubs[PlayerClub].Garage
-			hasClub = true
-			Citizen.Wait(500)
-			displayClubMarkers(PlayerClub)
-			playerZones()
-			ClubGarages()
-			addClubBlips(PlayerClub)
-		else
-			zones = {}
-			garage = {}
-			hasClub = false
-		end
-	end)
+	PlayerClub = club
+	PlayerRank = clubrankname
+	PlayerRankNum = clubrank
+	if PlayerClub ~= nil and has_value(ClubList, PlayerClub) then
+		zones = Config.Clubs[PlayerClub].Zones
+		garage = Config.Clubs[PlayerClub].Garage
+		hasClub = true
+		Citizen.Wait(500)
+		displayClubMarkers(PlayerClub)
+		playerZones()
+		ClubGarages()
+		addClubBlips(PlayerClub)
+	else
+		zones = {}
+		garage = {}
+		hasClub = false
+	end
 end)
 
 RegisterNetEvent('sody_clubs:clubPromoted')
