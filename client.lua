@@ -182,7 +182,7 @@ AddEventHandler('sody_clubs:action', function(zone)
 		local menutitle = PlayerClub .. "menu"
 		local elements = {}
 
-		if PlayerRankNum >= Config.Clubs[PlayerClub].Perms.StorageRankMinPriv then
+		if tonumber(PlayerRankNum) >= Config.Clubs[PlayerClub].Perms.StorageRankMinPriv then
 			elements = {
 				{label = _U('deposit_stock'),  value = 'put_stock'},
 				{label = _U('withdraw_stock'), value = 'get_stock'}
