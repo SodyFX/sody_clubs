@@ -10,7 +10,7 @@ Config.ClubBlipPre = "Club House: " --Prefix to Blip Name on map
 Config.PayInterval = 28 * 60000 -- Adjust '28' to set payout time in minutes
 Config.EnableClubBankPay = true -- Enables Pay to come out of club's bank instead of thin air
 Config.EnableESXIdentity = true -- Shows characer first/lastname instead of Steam name in member menu
-Config.GarageScript = "esx_advancedgarage" -- 'eden_garage' (for eden_garage/esx_drp_garage) or 'esx_advancedgarage' supported
+Config.GarageScript = "eden_garage" -- 'eden_garage' (for eden_garage/esx_drp_garage) or 'esx_advancedgarage' supported
 
 Config.ClubBlips = { -- Only shown to club members
 	lmc = { -- Must match Database name
