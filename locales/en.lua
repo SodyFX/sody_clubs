@@ -60,6 +60,7 @@ Locales['en'] = {
   ['stock_vehicle'] = 'Store the vehicle',
   ['status_in_garage'] = '%s: <font color="green">In Garage</font>',
   ['status_out_garage'] = '%s: <font color="orange">Not In Garage</font>',
+  ['vehicle_in_garage'] = 'Your Vehicle is stored in the Garage.',
   ['status_impounded'] = '%s: <font color="red">Impounded</font>',
   ['ranger'] = 'Garage: <br /> Your car has been stored in the garage!',
   ['promote_member'] = 'promote %s',
