@@ -13,7 +13,7 @@ A resource for FiveM and ESX. This resources adds an additional layer of society
 * esx_addonaccount (club bank)
 * esx_datastore (club storage)
 * esx_addoninventory (club storage)
-* eden_garage / esx_drp_garage (vehicle garage)
+* eden_garage / esx_drp_garage (vehicle garage)  OR  esx_advancedgarage
 * pNotify
 
 ### Clubs Features:
