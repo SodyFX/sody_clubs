@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Sody Clubs
--- v1.0.2 - 12/20/2019
+-- v1.0.4 - 1/25/2020
 -- By SodyFX with Love
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -14,7 +14,7 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 MySQL.ready(function()
 --AddEventHandler('onResourceStart', function(resourceName) -- For debugging to start/stop resources without server restart
-	Wait(5000) -- For debugging to start/stop resources without server restart
+	Wait(2000) -- For debugging to start/stop resources without server restart
 	local result = MySQL.Sync.fetchAll('SELECT * FROM sody_clubs', {})
 
 	for i=1, #result, 1 do

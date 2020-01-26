@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Sody Clubs
--- v1.0.3 - 12/26/2019
+-- v1.0.4 - 1/25/2020
 -- By SodyFX with Love
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ end)
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 --AddEventHandler('onResourceStart', function(resourceName) -- For debugging to start/stop resources without server restart
-	Citizen.Wait(1000)
+	Citizen.Wait(5000)
 	zones = {}
 	garage = {}
 	hasClub = false
@@ -1271,10 +1271,18 @@ function OpenMenuGarage(PointType)
 
 			menu.close()
 			if(data.current.value == 'list_vehicles') then
-				ListVehiclesMenu()
+				if Config.GarageScript == 'eden_garage' then
+					ListVehiclesMenu()
+				elseif Config.GarageScript == 'esx_advancedgarage' then
+					ListVehiclesMenuAG()
+				end
 			end
 			if(data.current.value == 'stock_vehicle') then
-				StockVehicleMenu()
+				if Config.GarageScript == 'eden_garage' then
+					StockVehicleMenu()
+				elseif Config.GarageScript == 'esx_advancedgarage' then
+					StockVehicleMenuAG()
+				end
 			end
 
 		end,
@@ -1341,6 +1349,59 @@ function ListVehiclesMenu()
 	end)
 end
 
+function ListVehiclesMenuAG()
+	local elements = {}
+
+	ESX.TriggerServerCallback('esx_advancedgarage:getOwnedCars', function(vehicles)
+
+		print(json.encode(vehicles))
+
+	Citizen.Wait(10)
+
+ 	for _,v in pairs(vehicles) do
+
+        	local hashVehicule = GetDisplayNameFromVehicleModel(v.vehicle.model)
+        	local vehicleName = nil
+        	local teststring = tostring(ESX.Math.Trim(GetLabelText(hashVehicule)))
+        	if string.find(teststring, "NULL") then
+	        	vehicleName = hashVehicule
+	        else
+	        	vehicleName = GetLabelText(hashVehicule)
+	        end
+        	local labelvehicle
+
+        	if v.stored then
+        		labelvehicle = _U('status_in_garage', v.plate, vehicleName)
+        		table.insert(elements, {label = labelvehicle , value = v})
+        	elseif not v.stored then
+        		labelvehicle = _U('status_impounded', v.plate, vehicleName)
+        		table.insert(elements, {label = labelvehicle , value = v})
+        	end
+        
+   	 end
+
+		ESX.UI.Menu.Open(
+		'default', GetCurrentResourceName(), 'spawn_vehicle',
+		{
+			title    = "Club Garage",
+			align    = 'top-right',
+			elements = elements,
+		},
+		function(data, menu)
+			if data.current.value.stored then
+				menu.close()
+				SpawnVehicleClubAG(data.current.value.vehicle)
+			elseif not data.current.value.stored then
+				exports.pNotify:SendNotification({ text = _U('notif_car_impounded'), queue = "right", timeout = 3000, layout = "centerLeft" })
+			end
+		end,
+		function(data, menu)
+			menu.close()
+		end
+	)	
+	end)
+end
+
 function StockVehicleMenu()
 	local playerPed = GetPlayerPed(-1)
 
@@ -1387,6 +1448,34 @@ function StockVehicleMenu()
 
 end
 
+function StockVehicleMenuAG()
+	local playerPed = GetPlayerPed(-1)
+
+	if IsPedInAnyVehicle(playerPed,  false) then
+
+		local playerPed = GetPlayerPed(-1)
+    	local coords = GetEntityCoords(playerPed)
+    	local vehicle = GetVehiclePedIsIn(playerPed,false)     
+		local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
+		local current = GetPlayersLastVehicle(GetPlayerPed(-1), true)
+		local engineHealth = GetVehicleEngineHealth(current)
+
+		ESX.TriggerServerCallback('esx_advancedgarage:storeVehicle',function(valid)
+
+			if (valid) then
+				ESX.Game.DeleteVehicle(vehicle)
+				TriggerServerEvent('esx_advancedgarage:setVehicleState', vehicleProps.plate, true)
+				ESX.ShowNotification(_U('vehicle_in_garage'))
+			else
+				exports.pNotify:SendNotification({ text = _U('stockv_not_owned'), queue = "right", timeout = 3000, layout = "centerLeft" })
+			end
+		end,vehicleProps)
+	else		
+		exports.pNotify:SendNotification({ text = _U('stockv_not_in_veh'), queue = "right", timeout = 3000, layout = "centerLeft" })
+	end
+
+end
+
 function SpawnVehicleClub(vehicle)
 	ESX.Game.SpawnVehicle(vehicle.model,{
 		x=CurrentGarage.x ,
@@ -1402,6 +1491,23 @@ function SpawnVehicleClub(vehicle)
 		end)
 
 	TriggerServerEvent('eden_garage:modifystate', vehicle, false, false)
+end
+
+function SpawnVehicleClubAG(vehicle)
+	ESX.Game.SpawnVehicle(vehicle.model,{
+		x=CurrentGarage.x ,
+		y=CurrentGarage.y,
+		z=CurrentGarage.z + 1											
+		},CurrentGarage.h, function(callback_vehicle)
+		ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
+			SetVehRadioStation(callback_vehicle, "OFF")
+			SetVehicleHasBeenOwnedByPlayer(callback_vehicle, true)
+			TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
+			SetVehicleEngineOn(callback_vehicle, true, true, true)
+			Citizen.Wait(200)
+		end)
+
+	TriggerServerEvent('esx_advancedgarage:setVehicleState', vehicle.plate, false)
 end
 
 function has_value (tab, val)
