@@ -98,10 +98,10 @@ end)
 
 Insert after Line 151 (inside IsAuthorized function, below job check but above return false
 ```
-if doorID.authorizedClubs ~= nil then
+if door.authorizedClubs ~= nil then
 	if PlayerClub ~= nil and PlayerRankNum ~= nil then
-		for _,club in pairs(doorID.authorizedClubs) do
-			if club == PlayerClub and doorID.authorizedClubRank[1] <= PlayerRankNum then
+		for _,club in pairs(door.authorizedClubs) do
+			if club == PlayerClub and door.authorizedClubRank[1] <= PlayerRankNum then
 				return true
 			end
 		end
@@ -113,14 +113,14 @@ end
 Add a new door like any other for esx_doorlocks except add authorizedClubs and authorizedClubRank as well. authorizedClubs is the club name from sody_clubs config and authorizedClubRank is the minimum rank in the club required to use the door. Here's the LMC club example:
 ```
 {
-	objName = 'v_ilev_lostdoor',
+	objHash = GetHashKey('v_ilev_lostdoor'),
 	objCoords  = vector3(981.61, -102.57, 74.85),
 	textCoords = vector3(981.72, -102.82, 75.85),
 	authorizedJobs = {  },
-	authorizedClubs = { 'lmc' },
+	authorizedClubs = { 'lmc', },
 	authorizedClubRank = { 0 },
 	locked = true,
-	distance = 12,
+	maxDistance = 12,
 	size = 2
 },
 ```
