@@ -16,7 +16,7 @@ CREATE TABLE `sody_clubs_ranks` (
 
 ALTER TABLE `users` ADD `club` VARCHAR(30) NULL, ADD `club_rank` TINYINT(5) NULL;
 
-INSERT INTO `sody_clubs` (`name`, `label`) VALUES ('lmc', 'Lost Motorcycle Club');f
+INSERT INTO `sody_clubs` (`name`, `label`) VALUES ('lmc', 'Lost Motorcycle Club');
 
 INSERT INTO `sody_clubs_ranks` (`id`, `club_name`, `club_rank`, `club_rank_name`, `club_rank_label`, `pay`) VALUES
 (NULL, 'lmc', 0, 'biker', 'Biker', 1500),
